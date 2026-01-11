@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>org.example</groupId>
+    <artifactId>jmeter_mvn1</artifactId>
+    <version>1.0-SNAPSHOT</version>
+
+    <properties>
+        <maven.compiler.source>21</maven.compiler.source>
+        <maven.compiler.target>21</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <jmeter.version>5.6.3</jmeter.version>
+        <jmeter.plugin.version>3.8.0</jmeter.plugin.version>
+    </properties>
+
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>com.lazerycode.jmeter</groupId>
+                <artifactId>jmeter-maven-plugin</artifactId>
+                <version>3.6.0</version>
+
+                <configuration>
+
+                    <jMeterProcessJVMSettings>
+                        <arguments>
+                            <argument>-XX:MaxMetaspaceSize=256m</argument>
+                            <argument>-Xmx30g</argument>
+                            <argument>-Xms1024m</argument>
+                        </arguments>
+                    </jMeterProcessJVMSettings>
+
+                    <jmeterExtensions>
+                        <artifact>kg.apc:jmeter-plugins-casutg:2.4</artifact>
+                    </jmeterExtensions>
+                    <!-- The plugin uses some broken dependencies
+                         An alternative is to set this to true and use excludedArtifacts, see below
+                    -->
+                    <downloadExtensionDependencies>true</downloadExtensionDependencies>
+                    <errorRateThresholdInPercent>5</errorRateThresholdInPercent>
+                    <resultsFileNameDateFormat>MMMM, yyyy</resultsFileNameDateFormat>
+                    <testResultsTimestamp>false</testResultsTimestamp>
+                    <generateReports>true</generateReports>
+                    <resultsDirectory>${project.build.directory}/jmeter/results</resultsDirectory>
+                    <reportsDirectory>${project.build.directory}/jmeter/reports</reportsDirectory>
+                    <propertiesUser>
+                        <jmeter.save.saveservice.output_format>csv</jmeter.save.saveservice.output_format>
+                        <jmeter.save.saveservice.bytes>true</jmeter.save.saveservice.bytes>
+                        <jmeter.save.saveservice.label>true</jmeter.save.saveservice.label>
+                        <jmeter.save.saveservice.latency>true</jmeter.save.saveservice.latency>
+                        <jmeter.save.saveservice.response_code>true</jmeter.save.saveservice.response_code>
+                        <jmeter.save.saveservice.response_message>true</jmeter.save.saveservice.response_message>
+                        <jmeter.save.saveservice.successful>true</jmeter.save.saveservice.successful>
+                        <jmeter.save.saveservice.thread_counts>true</jmeter.save.saveservice.thread_counts>
+                        <jmeter.save.saveservice.thread_name>true</jmeter.save.saveservice.thread_name>
+                        <jmeter.save.saveservice.time>true</jmeter.save.saveservice.time>
+                        <jmeter.save.saveservice.response_data>true</jmeter.save.saveservice.response_data>
+                        <jmeter.save.saveservice.samplerData>true</jmeter.save.saveservice.samplerData>
+                        <jmeter.save.saveservice.requestHeaders>true</jmeter.save.saveservice.requestHeaders>
+                        <jmeter.save.saveservice.url>true</jmeter.save.saveservice.url>
+                        <jmeter.save.saveservice.responseHeaders>true</jmeter.save.saveservice.responseHeaders>
+
+                    </propertiesUser>
+                    <testFilesIncluded>
+                        <jMeterTestFile>DeckOfCards.jmx</jMeterTestFile>
+
+                    </testFilesIncluded>
+
+                </configuration>
+
+                <executions>
+                    <!-- Generate JMeter configuration -->
+                    <execution>
+                        <id>configuration</id>
+                        <goals>
+                            <goal>configure</goal>
+                        </goals>
+                    </execution>
+                    <!-- Run JMeter tests -->
+                    <execution>
+                        <id>jmeter-tests</id>
+                        <goals>
+                            <goal>jmeter</goal>
+                        </goals>
+                    </execution>
+                    <!-- Fail build on errors in test -->
+                    <execution>
+                        <id>jmeter-check-results</id>
+                        <goals>
+                            <goal>results</goal>
+                        </goals>
+                    </execution>
+                </executions>
+
+            </plugin>
+        </plugins>
+
+    </build>
+
+</project>
